@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Dashboard - Project Genesis</title>
+<link rel="shortcut icon" type="image/png" href="https://static.wixstatic.com/media/ccb508_3ceeb866e75d4c07bf6118332ee3398b~mv2.png/v1/crop/x_28,y_0,w_532,h_521/fill/w_108,h_106,al_c,q_80,usm_0.66_1.00_0.01/legendsneverdie.webp">
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Manage your servers modules with Project Genesis Dashboard.">
+<meta name="DC.title" content="Dashboard - Project Genesis">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Style the body */
+body {
+  font-family: 'Poppins', sans-serif !important;
+  margin: 0;
+  color: white;
+  background-color: #7289DA;
+}
+
+/* Header/logo Title */
+.header {
+  padding: 30px;
+  text-align: center;
+  background-color: #23272A;
+  color: white;
+}
+  
+.header h2 {
+    font-size: 30px;
+}  
+  
+/* Increase the font size of the heading */
+.header h1 {
+  font-size: 80px;
+}
+  
+
+
+/* Style the top navigation bar */
+.navbar {
+  overflow: hidden;
+  background-color: #23272A;
+}
+
+/* Style the navigation bar links */
+.navbar a {
+  border-radius: 25px;
+  float: left;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 20px 20px;
+  margin: 0 5px;
+  text-decoration: none;
+}
+
+/* Right-aligned link */
+.navbar a.right {
+  float: right;
+}
+
+/* Change color on hover */
+.navbar a:hover {
+  background-color: #353e4c;
+}
+
+/* Column container */
+.row {  
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+}
+
+
+/* Main column */
+.main {   
+  -ms-flex: 70%; /* IE10 */
+  flex: 70%;
+  background-color: black;
+  padding: 20px;
+}
+
+@media screen and (max-width: 700px) {
+  .navbar a {
+    float: none;
+    width: 100%;
+  }
+   .row { 
+    flex-direction: column;
+  }
+  .header p {
+    font-size: 20px;
+  }
+  .header h1 {
+    font-size: 30px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <a href="https://projectgenesis.glitch.me/home/">Home</a>
+  <a href="https://projectgenesis.glitch.me/commands/">Commands</a>
+  <a href="https://projectgenesis.glitch.me/dashboard/">Dashboard</a>
+  <a href="https://discordapp.com/oauth2/authorize?client_id=626541495163551777&scope=bot&permissions=8" class="right">Add to Server</a>
+  <a href="https://discordapp.com/invite/kVZcd4u" class="right">Support Server</a>
+</div>
+  
+<div class="header">
+  <h1>Dashboard</h1>
+  <h2>Still in Development!</h2>
+</div>
+
+<div id="main">
+  <select id="guilds"></select>
+  <input id="newvalue" placeholder="Set Value here!">
+  <button onclick="setnewvalue()">Submit</button>
+  </div>
+  <script>
+      var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://discordapp.com/api/users/@me/guilds")
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.setRequestHeader("Authorization", "Bearer " + window.localStorage.token);
+    xhr.onload = function() {
+      var response = JSON.parse(xhr.response);
+      if (!response[0]) return window.location.replace("https://discordapp.com/api/oauth2/authorize?client_id=626541495163551777&redirect_uri=https%3A%2F%2Fprojectgenesis.glitch.me%2Fcallback%2F&response_type=token&scope=identify%20guilds")
+      response.forEach(guild=>{
+        if (guild.permissions == '2147483647') {
+          var selecter = document.createElement("option");
+          selecter.innerHTML = guild.name;
+          selecter.value = guild.id;
+        document.getElementById("guilds").appendChild(selecter)
+        } /* https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.jpg?size=128 */
+      }) 
+    } 
+    xhr.send();
+    function setnewvalue() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://projectgenesis.glitch.me/bot-queue");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify({
+        token: window.localStorage.token,
+        id: document.getElementById("guilds").value,
+        value: document.getElementById("newvalue").value,
+      }))
+    }
+  </script>
+</body>
+</html>
